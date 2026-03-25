@@ -461,7 +461,7 @@ const looksLikeCategoryTitle = (title) => {
 }
 
 
-const parseListingsFromHtml = (html, source) => {
+export const parseListingsFromHtml = (html, source) => {
   const items = []
   const jsonLdObjects = extractJsonLdObjects(html)
 
@@ -478,8 +478,7 @@ const parseListingsFromHtml = (html, source) => {
         const price = Number(offers.price || 0) || 0
         const loc = parseLocationParts(item.address?.addressLocality || item.address?.addressRegion || '')
         if (url && title && isLikelyDetailUrl(source.code, url) && price > 0 && !looksLikeCategoryTitle(title)) {
-          if (price <= 0 || looksLikeCategoryTitle(body)) continue
-    items.push({
+          items.push({
             sourceListingId: item.identifier || item.sku || url,
             sourceUrl: url,
             offerType: 'sale',
