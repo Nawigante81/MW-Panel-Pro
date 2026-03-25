@@ -242,10 +242,14 @@ const Marketplace = () => {
     })
   }, [listings, q, sourceFilter, typeFilter, statusFilter, regionFilter])
 
-  const sourceCodes = useMemo(
-    () => [...new Set(listings.map((x) => x.sourceCode).filter(Boolean))] as string[],
-    [listings]
-  )
+  const sourceCodes = useMemo(() => {
+    const fromSources = sources
+      .filter((source) => source?.isActive !== false)
+      .map((source) => String(source?.code || '').trim())
+      .filter(Boolean)
+    const fromListings = listings.map((x) => x.sourceCode).filter(Boolean) as string[]
+    return [...new Set([...fromSources, ...fromListings])].sort((a, b) => a.localeCompare(b, 'pl'))
+  }, [sources, listings])
 
   useEffect(() => {
     setCurrentPage(1)

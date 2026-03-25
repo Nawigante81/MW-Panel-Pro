@@ -15,3 +15,12 @@ test('market monitoring views default to all regions', () => {
   assert.doesNotMatch(marketplaceSource, /const DEFAULT_REGION = 'pomorskie'/)
   assert.doesNotMatch(compactWidgetSource, /const DEFAULT_REGION = 'pomorskie'/)
 })
+
+test('marketplace source filter uses configured sources list', () => {
+  const marketplaceSource = fs.readFileSync(marketplacePath, 'utf8')
+
+  assert.match(marketplaceSource, /const sourceCodes = useMemo\(\(\) => \{/)
+  assert.match(marketplaceSource, /const fromSources = sources/)
+  assert.match(marketplaceSource, /source\?\.isActive !== false/)
+  assert.match(marketplaceSource, /\[\.\.\.new Set\(\[\.\.\.fromSources, \.\.\.fromListings\]\)\]/)
+})
