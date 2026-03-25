@@ -11,7 +11,7 @@ import { getContextHelp } from './helpContent'
 
 
 const REGION_KEY = 'mw.market.region-filter'
-const DEFAULT_REGION = 'pomorskie'
+const DEFAULT_REGION = 'all'
 const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00ffc6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1220]'
 
 
