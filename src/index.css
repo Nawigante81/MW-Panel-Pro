@@ -1,0 +1,277 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+@import "tailwindcss";
+
+:root {
+  --bg-main: #0d0f12;
+  --bg-panel: #151922;
+  --bg-elev: #1b2130;
+
+  --text-main: #e6edf3;
+  --text-dim: #8b949e;
+  --text-dead: #5a616d;
+
+  --accent-main: #00ffc6;
+  --accent-hover: #00d1a0;
+  --accent-glow: #00ffc640;
+  --accent-2: #a855f7;
+  --accent-warn: #ff7a00;
+  --accent-danger: #ff3b3b;
+
+  --border-subtle: #222938;
+  --border-strong: #2d3648;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.cyber-shell {
+  background:
+    radial-gradient(circle at 20% 0%, #00ffc610 0%, transparent 60%),
+    radial-gradient(circle at 90% 10%, #a855f710 0%, transparent 40%),
+    var(--bg-main);
+  color: var(--text-main);
+}
+
+.sidebar {
+  background: #0b0e13;
+  border-right: 1px solid #1f2633;
+}
+
+.nav-group {
+  position: relative;
+}
+
+.nav-group__label {
+  padding: 0 12px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+}
+
+.nav-item {
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transform-origin: left center;
+}
+
+.nav-item--expanded {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  justify-items: start;
+}
+
+.nav-item--collapsed {
+  justify-content: center;
+  min-width: 100%;
+}
+
+.nav-item__icon {
+  width: 20px;
+  height: 20px;
+  align-self: center;
+}
+
+.nav-item__label {
+  min-width: 0;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.nav-item__badge {
+  justify-self: end;
+}
+
+.nav-item:not(.active):not(.nav-item--danger):hover {
+  border-color: color-mix(in oklab, var(--border-strong) 78%, transparent);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.nav-item--expanded.active {
+  border-left: 2px solid var(--accent-main);
+  padding-left: 11px;
+}
+
+.nav-item.active {
+  background: #00ffc610;
+  border-color: var(--border-subtle);
+  color: var(--accent-main);
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 0 12px var(--accent-glow);
+}
+
+.nav-item.active .nav-item__label,
+.nav-item.active .nav-item__icon {
+  color: inherit;
+}
+
+.nav-item--danger {
+  color: #f87171;
+}
+
+.nav-item--danger:hover {
+  background: color-mix(in oklab, #ef4444 14%, transparent);
+  border-color: color-mix(in oklab, #ef4444 28%, transparent);
+}
+
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 0 12px #00000020;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, #00ffc615, transparent 60%);
+  pointer-events: none;
+}
+
+.btn-primary {
+  background: transparent;
+  border: 1px solid var(--accent-main);
+  color: var(--accent-main);
+}
+
+.btn-primary:hover {
+  background: var(--accent-main);
+  color: #000;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.stat {
+  position: relative;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent-main);
+}
+
+/* Global anti-SaaS remap for legacy Tailwind blue tokens */
+.bg-blue-600,
+.hover\:bg-blue-600:hover,
+.dark .dark\:bg-blue-600,
+.from-blue-600,
+.to-blue-600,
+.from-blue-500,
+.to-blue-500,
+.from-blue-700,
+.to-blue-700,
+.from-indigo-600,
+.to-indigo-600,
+.from-indigo-900,
+.via-blue-800 {
+  background: var(--accent-main) !important;
+  color: #000 !important;
+}
+
+.hover\:bg-blue-700:hover,
+.hover\:bg-blue-600:hover {
+  background: var(--accent-hover) !important;
+  color: #000 !important;
+}
+
+.text-blue-600,
+.text-blue-500,
+.text-blue-700,
+.dark .dark\:text-blue-400,
+.dark .dark\:text-blue-300 {
+  color: var(--accent-main) !important;
+}
+
+.border-blue-500,
+.border-blue-600,
+.border-blue-300,
+.dark .dark\:border-blue-800,
+.dark .dark\:border-blue-600 {
+  border-color: var(--accent-main) !important;
+}
+
+.focus\:ring-blue-500:focus,
+.focus\:ring-blue-500\/90:focus,
+.focus\:border-blue-500:focus {
+  --tw-ring-color: var(--accent-main) !important;
+  border-color: var(--accent-main) !important;
+}
+
+.bg-blue-100,
+.dark .dark\:bg-blue-900\/20,
+.dark .dark\:bg-blue-900\/30,
+.dark .dark\:bg-blue-900\/10 {
+  background: color-mix(in oklab, var(--accent-main) 14%, transparent) !important;
+}
+
+.rounded-2xl,
+.rounded-3xl {
+  border-radius: 12px !important;
+}
+
+/* Leaflet + Tailwind reset compatibility */
+.leaflet-container img,
+.leaflet-container .leaflet-tile {
+  max-width: none !important;
+}
+
+/* Subtle scrollbar styling (menu/content separators, side panels) */
+* {
+}
+
+/* Chromium / WebKit */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.42);
+}
+
+/* GLOBAL PLACEHOLDER FIX */
+::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.dark ::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dark input:focus::placeholder,
+.dark textarea:focus::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

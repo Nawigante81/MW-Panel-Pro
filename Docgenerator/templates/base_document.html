@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{document_title}}</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 16mm 18mm 16mm;
+    @bottom-right {
+      content: "Strona " counter(page) " / " counter(pages);
+      font-family: "Times New Roman", serif;
+      font-size: 10px;
+      color: #6b7280;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { font-family: "Times New Roman", serif; font-size: 12px; line-height: 1.58; color: #111827; }
+
+  .watermark {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    opacity: .028;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .content { position: relative; z-index: 2; }
+
+  .header {
+    display: table;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d5dee8;
+  }
+
+  .header-left, .header-right { display: table-cell; vertical-align: middle; }
+  .header-left { width: 40%; }
+  .header-right { width: 60%; text-align: right; font-size: 11px; color: #4b5563; line-height: 1.45; }
+  .agency-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+
+  .doc-type {
+    margin: 16px 0 4px 0;
+    font-size: 23px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .25px;
+    color: #0f172a;
+  }
+
+  .doc-subtitle { font-size: 11px; color: #6b7280; margin-bottom: 12px; }
+
+  .info-bar {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+
+  .info-bar td {
+    padding: 8px 9px;
+    font-size: 11px;
+    border-right: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+
+  .info-bar td:last-child { border-right: none; }
+  .meta-label { display: block; font-weight: 700; color: #374151; margin-bottom: 2px; }
+
+  .section { margin-top: 14px; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0b6fa4;
+    margin: 0 0 7px 0;
+    text-transform: uppercase;
+    letter-spacing: .45px;
+  }
+
+  .two-col { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin-left: -10px; margin-right: -10px; }
+  .two-col td { width: 50%; vertical-align: top; }
+
+  .soft-box {
+    border: 1px solid #e6ebf1;
+    padding: 10px 11px;
+    background: #fff;
+  }
+
+  .soft-box h4 {
+    margin: 0 0 7px 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    color: #475569;
+  }
+
+  .data-table, .property-grid, .signatures { width: 100%; border-collapse: collapse; }
+
+  .data-table td {
+    padding: 5px 4px;
+    border-bottom: 1px solid #eef2f6;
+    vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .label { width: 44%; font-weight: 700; color: #374151; white-space: nowrap; }
+
+  .property-grid td {
+    border: 1px solid #e8edf3;
+    padding: 7px 8px;
+    vertical-align: top;
+  }
+
+  .property-grid .head {
+    background: #f8fafc;
+    width: 22%;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .terms {
+    border: 1px solid #e6ebf1;
+    padding: 10px 12px;
+    background: #fff;
+  }
+
+  .terms p { margin: 0 0 8px 0; text-align: justify; }
+  .terms p:last-child { margin-bottom: 0; }
+
+  .signatures { margin-top: 32px; table-layout: fixed; }
+  .signatures td { width: 33.33%; text-align: center; vertical-align: bottom; padding: 0 10px; }
+  .sign-space { height: 52px; }
+  .sign-line { border-top: 1px solid #334155; margin: 0 auto 6px auto; width: 88%; }
+  .sign-label { font-size: 11px; color: #334155; }
+
+  .footer {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #dbe3ec;
+    font-size: 10px;
+    color: #6b7280;
+    display: table;
+    width: 100%;
+  }
+
+  .footer-left, .footer-center, .footer-right { display: table-cell; vertical-align: middle; }
+  .footer-left { width: 47%; }
+  .footer-center { width: 16%; text-align: center; }
+  .footer-right { width: 37%; text-align: right; }
+
+  .qr-box {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+    border: 1px solid #e6ebf1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .qr-box img { width: 100%; height: 100%; object-fit: cover; }
+  .mono { font-family: "Courier New", monospace; }
+  .badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid #d5dee8;
+    border-radius: 999px;
+    font-size: 9px;
+    margin-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: .25px;
+  }
+
+  .break-inside-avoid { page-break-inside: avoid; break-inside: avoid; }
+</style>
+</head>
+<body>
+  <div class="watermark">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 340" width="520" aria-label="MW">
+      <path fill="#009fe3" d="M677.75,2H583.57l43.54,206.36h.95ZM878,2H784.24l49.23,206.36h.95Zm30.29,337.93h43.22L1050.39,2h-43.23Zm-224.34,0h93.24L731.24,152.51h-1ZM98.45,2,0,339.93H129.21l43.54-206.36h.95l49.7,206.36H329.89l49.22-206.36h.95L423.6,339.93H552.81L454.36,2H322.79L276.88,189.42h-.95L229.55,2Z"/>
+    </svg>
+  </div>
+
+  <div class="content">
+    <div class="header break-inside-avoid">
+      <div class="header-left">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 340" width="200" aria-label="MW">
+          <path fill="#009fe3" d="M677.75,2H583.57l43.54,206.36h.95ZM878,2H784.24l49.23,206.36h.95Zm30.29,337.93h43.22L1050.39,2h-43.23Zm-224.34,0h93.24L731.24,152.51h-1ZM98.45,2,0,339.93H129.21l43.54-206.36h.95l49.7,206.36H329.89l49.22-206.36h.95L423.6,339.93H552.81L454.36,2H322.79L276.88,189.42h-.95L229.55,2Z"/>
+        </svg>
+      </div>
+      <div class="header-right">
+        <div class="agency-name">{{agency_name}}</div>
+        <div>{{agency_address}}</div>
+        <div>NIP: {{agency_nip}}</div>
+        <div>tel. {{agency_phone}} | email: {{agency_email}}</div>
+      </div>
+    </div>
+
+    <div class="doc-type">{{document_title}}</div>
+    <div class="doc-subtitle">Dokument wygenerowany automatycznie w systemie MWPanel CRM</div>
+
+    <table class="info-bar break-inside-avoid">
+      <tr>
+        <td><span class="meta-label">Nr dokumentu</span>{{document_number}}</td>
+        <td><span class="meta-label">Data</span>{{date}}</td>
+        <td><span class="meta-label">Miejsce</span>{{document_place}}</td>
+        <td><span class="meta-label">Status</span>{{document_status}}</td>
+      </tr>
+    </table>
+
+    {{document_body}}
+
+    <div class="footer break-inside-avoid">
+      <div class="footer-left">
+        <div><b>MWPanel CRM</b> | {{agency_name}}</div>
+        <div>{{agency_address}} | {{agency_phone}} | {{agency_email}}</div>
+      </div>
+      <div class="footer-center">
+        <div class="qr-box">{{qr_code_image}}</div>
+      </div>
+      <div class="footer-right">
+        <div>ID dokumentu: <span class="mono">{{document_id}}</span></div>
+        <div>Hash: <span class="mono">{{document_hash}}</span></div>
+        <div>Wersja: {{document_version}} <span class="badge">{{document_status}}</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

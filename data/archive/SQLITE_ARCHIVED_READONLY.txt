@@ -1,0 +1,4 @@
+SQLite archived after PostgreSQL cutover.
+Timestamp (UTC): 20260317T202058Z
+Source: data/mwpanel.sqlite
+Mode: read-only (440)

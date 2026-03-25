@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clients>
+
+  <client>
+    <id>1</id>
+    <first_name>Imie1</first_name>
+    <last_name>Nazwisko1</last_name>
+    <email>klient1@demo.pl</email>
+    <phone>+4850010001</phone>
+    <company>Firma 1</company>
+    <street>ul. Testowa 1</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>2</id>
+    <first_name>Imie2</first_name>
+    <last_name>Nazwisko2</last_name>
+    <email>klient2@demo.pl</email>
+    <phone>+4850010002</phone>
+    <company>Firma 2</company>
+    <street>ul. Testowa 2</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>3</id>
+    <first_name>Imie3</first_name>
+    <last_name>Nazwisko3</last_name>
+    <email>klient3@demo.pl</email>
+    <phone>+4850010003</phone>
+    <company>Firma 3</company>
+    <street>ul. Testowa 3</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>4</id>
+    <first_name>Imie4</first_name>
+    <last_name>Nazwisko4</last_name>
+    <email>klient4@demo.pl</email>
+    <phone>+4850010004</phone>
+    <company>Firma 4</company>
+    <street>ul. Testowa 4</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>5</id>
+    <first_name>Imie5</first_name>
+    <last_name>Nazwisko5</last_name>
+    <email>klient5@demo.pl</email>
+    <phone>+4850010005</phone>
+    <company>Firma 5</company>
+    <street>ul. Testowa 5</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>6</id>
+    <first_name>Imie6</first_name>
+    <last_name>Nazwisko6</last_name>
+    <email>klient6@demo.pl</email>
+    <phone>+4850010006</phone>
+    <company>Firma 6</company>
+    <street>ul. Testowa 6</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>7</id>
+    <first_name>Imie7</first_name>
+    <last_name>Nazwisko7</last_name>
+    <email>klient7@demo.pl</email>
+    <phone>+4850010007</phone>
+    <company>Firma 7</company>
+    <street>ul. Testowa 7</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>8</id>
+    <first_name>Imie8</first_name>
+    <last_name>Nazwisko8</last_name>
+    <email>klient8@demo.pl</email>
+    <phone>+4850010008</phone>
+    <company>Firma 8</company>
+    <street>ul. Testowa 8</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>9</id>
+    <first_name>Imie9</first_name>
+    <last_name>Nazwisko9</last_name>
+    <email>klient9@demo.pl</email>
+    <phone>+4850010009</phone>
+    <company>Firma 9</company>
+    <street>ul. Testowa 9</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>10</id>
+    <first_name>Imie10</first_name>
+    <last_name>Nazwisko10</last_name>
+    <email>klient10@demo.pl</email>
+    <phone>+4850010010</phone>
+    <company>Firma 10</company>
+    <street>ul. Testowa 10</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>11</id>
+    <first_name>Imie11</first_name>
+    <last_name>Nazwisko11</last_name>
+    <email>klient11@demo.pl</email>
+    <phone>+4850010011</phone>
+    <company>Firma 11</company>
+    <street>ul. Testowa 11</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>12</id>
+    <first_name>Imie12</first_name>
+    <last_name>Nazwisko12</last_name>
+    <email>klient12@demo.pl</email>
+    <phone>+4850010012</phone>
+    <company>Firma 12</company>
+    <street>ul. Testowa 12</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>13</id>
+    <first_name>Imie13</first_name>
+    <last_name>Nazwisko13</last_name>
+    <email>klient13@demo.pl</email>
+    <phone>+4850010013</phone>
+    <company>Firma 13</company>
+    <street>ul. Testowa 13</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>14</id>
+    <first_name>Imie14</first_name>
+    <last_name>Nazwisko14</last_name>
+    <email>klient14@demo.pl</email>
+    <phone>+4850010014</phone>
+    <company>Firma 14</company>
+    <street>ul. Testowa 14</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>15</id>
+    <first_name>Imie15</first_name>
+    <last_name>Nazwisko15</last_name>
+    <email>klient15@demo.pl</email>
+    <phone>+4850010015</phone>
+    <company>Firma 15</company>
+    <street>ul. Testowa 15</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>16</id>
+    <first_name>Imie16</first_name>
+    <last_name>Nazwisko16</last_name>
+    <email>klient16@demo.pl</email>
+    <phone>+4850010016</phone>
+    <company>Firma 16</company>
+    <street>ul. Testowa 16</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>17</id>
+    <first_name>Imie17</first_name>
+    <last_name>Nazwisko17</last_name>
+    <email>klient17@demo.pl</email>
+    <phone>+4850010017</phone>
+    <company>Firma 17</company>
+    <street>ul. Testowa 17</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>18</id>
+    <first_name>Imie18</first_name>
+    <last_name>Nazwisko18</last_name>
+    <email>klient18@demo.pl</email>
+    <phone>+4850010018</phone>
+    <company>Firma 18</company>
+    <street>ul. Testowa 18</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>19</id>
+    <first_name>Imie19</first_name>
+    <last_name>Nazwisko19</last_name>
+    <email>klient19@demo.pl</email>
+    <phone>+4850010019</phone>
+    <company>Firma 19</company>
+    <street>ul. Testowa 19</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>20</id>
+    <first_name>Imie20</first_name>
+    <last_name>Nazwisko20</last_name>
+    <email>klient20@demo.pl</email>
+    <phone>+4850010020</phone>
+    <company>Firma 20</company>
+    <street>ul. Testowa 20</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>21</id>
+    <first_name>Imie21</first_name>
+    <last_name>Nazwisko21</last_name>
+    <email>klient21@demo.pl</email>
+    <phone>+4850010021</phone>
+    <company>Firma 21</company>
+    <street>ul. Testowa 21</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>22</id>
+    <first_name>Imie22</first_name>
+    <last_name>Nazwisko22</last_name>
+    <email>klient22@demo.pl</email>
+    <phone>+4850010022</phone>
+    <company>Firma 22</company>
+    <street>ul. Testowa 22</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>23</id>
+    <first_name>Imie23</first_name>
+    <last_name>Nazwisko23</last_name>
+    <email>klient23@demo.pl</email>
+    <phone>+4850010023</phone>
+    <company>Firma 23</company>
+    <street>ul. Testowa 23</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>24</id>
+    <first_name>Imie24</first_name>
+    <last_name>Nazwisko24</last_name>
+    <email>klient24@demo.pl</email>
+    <phone>+4850010024</phone>
+    <company>Firma 24</company>
+    <street>ul. Testowa 24</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>25</id>
+    <first_name>Imie25</first_name>
+    <last_name>Nazwisko25</last_name>
+    <email>klient25@demo.pl</email>
+    <phone>+4850010025</phone>
+    <company>Firma 25</company>
+    <street>ul. Testowa 25</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>26</id>
+    <first_name>Imie26</first_name>
+    <last_name>Nazwisko26</last_name>
+    <email>klient26@demo.pl</email>
+    <phone>+4850010026</phone>
+    <company>Firma 26</company>
+    <street>ul. Testowa 26</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>27</id>
+    <first_name>Imie27</first_name>
+    <last_name>Nazwisko27</last_name>
+    <email>klient27@demo.pl</email>
+    <phone>+4850010027</phone>
+    <company>Firma 27</company>
+    <street>ul. Testowa 27</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>28</id>
+    <first_name>Imie28</first_name>
+    <last_name>Nazwisko28</last_name>
+    <email>klient28@demo.pl</email>
+    <phone>+4850010028</phone>
+    <company>Firma 28</company>
+    <street>ul. Testowa 28</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>29</id>
+    <first_name>Imie29</first_name>
+    <last_name>Nazwisko29</last_name>
+    <email>klient29@demo.pl</email>
+    <phone>+4850010029</phone>
+    <company>Firma 29</company>
+    <street>ul. Testowa 29</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>30</id>
+    <first_name>Imie30</first_name>
+    <last_name>Nazwisko30</last_name>
+    <email>klient30@demo.pl</email>
+    <phone>+4850010030</phone>
+    <company>Firma 30</company>
+    <street>ul. Testowa 30</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>31</id>
+    <first_name>Imie31</first_name>
+    <last_name>Nazwisko31</last_name>
+    <email>klient31@demo.pl</email>
+    <phone>+4850010031</phone>
+    <company>Firma 31</company>
+    <street>ul. Testowa 31</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>32</id>
+    <first_name>Imie32</first_name>
+    <last_name>Nazwisko32</last_name>
+    <email>klient32@demo.pl</email>
+    <phone>+4850010032</phone>
+    <company>Firma 32</company>
+    <street>ul. Testowa 32</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>33</id>
+    <first_name>Imie33</first_name>
+    <last_name>Nazwisko33</last_name>
+    <email>klient33@demo.pl</email>
+    <phone>+4850010033</phone>
+    <company>Firma 33</company>
+    <street>ul. Testowa 33</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>34</id>
+    <first_name>Imie34</first_name>
+    <last_name>Nazwisko34</last_name>
+    <email>klient34@demo.pl</email>
+    <phone>+4850010034</phone>
+    <company>Firma 34</company>
+    <street>ul. Testowa 34</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>35</id>
+    <first_name>Imie35</first_name>
+    <last_name>Nazwisko35</last_name>
+    <email>klient35@demo.pl</email>
+    <phone>+4850010035</phone>
+    <company>Firma 35</company>
+    <street>ul. Testowa 35</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>36</id>
+    <first_name>Imie36</first_name>
+    <last_name>Nazwisko36</last_name>
+    <email>klient36@demo.pl</email>
+    <phone>+4850010036</phone>
+    <company>Firma 36</company>
+    <street>ul. Testowa 36</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>37</id>
+    <first_name>Imie37</first_name>
+    <last_name>Nazwisko37</last_name>
+    <email>klient37@demo.pl</email>
+    <phone>+4850010037</phone>
+    <company>Firma 37</company>
+    <street>ul. Testowa 37</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>38</id>
+    <first_name>Imie38</first_name>
+    <last_name>Nazwisko38</last_name>
+    <email>klient38@demo.pl</email>
+    <phone>+4850010038</phone>
+    <company>Firma 38</company>
+    <street>ul. Testowa 38</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>39</id>
+    <first_name>Imie39</first_name>
+    <last_name>Nazwisko39</last_name>
+    <email>klient39@demo.pl</email>
+    <phone>+4850010039</phone>
+    <company>Firma 39</company>
+    <street>ul. Testowa 39</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>40</id>
+    <first_name>Imie40</first_name>
+    <last_name>Nazwisko40</last_name>
+    <email>klient40@demo.pl</email>
+    <phone>+4850010040</phone>
+    <company>Firma 40</company>
+    <street>ul. Testowa 40</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>41</id>
+    <first_name>Imie41</first_name>
+    <last_name>Nazwisko41</last_name>
+    <email>klient41@demo.pl</email>
+    <phone>+4850010041</phone>
+    <company>Firma 41</company>
+    <street>ul. Testowa 41</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>42</id>
+    <first_name>Imie42</first_name>
+    <last_name>Nazwisko42</last_name>
+    <email>klient42@demo.pl</email>
+    <phone>+4850010042</phone>
+    <company>Firma 42</company>
+    <street>ul. Testowa 42</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>43</id>
+    <first_name>Imie43</first_name>
+    <last_name>Nazwisko43</last_name>
+    <email>klient43@demo.pl</email>
+    <phone>+4850010043</phone>
+    <company>Firma 43</company>
+    <street>ul. Testowa 43</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>44</id>
+    <first_name>Imie44</first_name>
+    <last_name>Nazwisko44</last_name>
+    <email>klient44@demo.pl</email>
+    <phone>+4850010044</phone>
+    <company>Firma 44</company>
+    <street>ul. Testowa 44</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>45</id>
+    <first_name>Imie45</first_name>
+    <last_name>Nazwisko45</last_name>
+    <email>klient45@demo.pl</email>
+    <phone>+4850010045</phone>
+    <company>Firma 45</company>
+    <street>ul. Testowa 45</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>46</id>
+    <first_name>Imie46</first_name>
+    <last_name>Nazwisko46</last_name>
+    <email>klient46@demo.pl</email>
+    <phone>+4850010046</phone>
+    <company>Firma 46</company>
+    <street>ul. Testowa 46</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>47</id>
+    <first_name>Imie47</first_name>
+    <last_name>Nazwisko47</last_name>
+    <email>klient47@demo.pl</email>
+    <phone>+4850010047</phone>
+    <company>Firma 47</company>
+    <street>ul. Testowa 47</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>48</id>
+    <first_name>Imie48</first_name>
+    <last_name>Nazwisko48</last_name>
+    <email>klient48@demo.pl</email>
+    <phone>+4850010048</phone>
+    <company>Firma 48</company>
+    <street>ul. Testowa 48</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>49</id>
+    <first_name>Imie49</first_name>
+    <last_name>Nazwisko49</last_name>
+    <email>klient49@demo.pl</email>
+    <phone>+4850010049</phone>
+    <company>Firma 49</company>
+    <street>ul. Testowa 49</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+
+  <client>
+    <id>50</id>
+    <first_name>Imie50</first_name>
+    <last_name>Nazwisko50</last_name>
+    <email>klient50@demo.pl</email>
+    <phone>+4850010050</phone>
+    <company>Firma 50</company>
+    <street>ul. Testowa 50</street>
+    <city>Zgorzelec</city>
+    <postal_code>59-900</postal_code>
+    <country>PL</country>
+    <source>import</source>
+    <status>active</status>
+  </client>
+
+</clients>

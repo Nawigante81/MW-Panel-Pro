@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2450 340" role="img" aria-label="MWPanel Tech CRM">
+  <defs>
+    <style>
+      .mw { fill:#009fe3; }
+      .panel { fill:#009fe3; font-family: Arial, Helvetica, sans-serif; font-weight: 900; font-size: 184px; letter-spacing: -6px; }
+      .accent { fill:none; stroke:#009fe3; stroke-width:10; stroke-linecap:round; opacity:.95; }
+    </style>
+  </defs>
+  <path class="mw" d="M677.75,2H583.57l43.54,206.36h.95ZM878,2H784.24l49.23,206.36h.95Zm30.29,337.93h43.22L1050.39,2h-43.23Zm-224.34,0h93.24L731.24,152.51h-1ZM98.45,2,0,339.93H129.21l43.54-206.36h.95l49.7,206.36H329.89l49.22-206.36h.95L423.6,339.93H552.81L454.36,2H322.79L276.88,189.42h-.95L229.55,2Z"/>
+  <g transform="translate(1024 0) skewX(-10)">
+    <text class="panel" x="0" y="304">Panel</text>
+  </g>
+  <path class="accent" d="M1038 315H1600"/>
+</svg>

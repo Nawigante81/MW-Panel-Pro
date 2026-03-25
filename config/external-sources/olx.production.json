@@ -1,0 +1,42 @@
+{
+  "name": "OLX Nieruchomości",
+  "code": "olx",
+  "baseUrl": "https://www.olx.pl",
+  "isActive": true,
+  "config": {
+    "mode": "api",
+    "apiUrl": "https://PARTNER_DOMAIN_OR_PROVIDER/api/olx/real-estate/offers",
+    "apiToken": "REPLACE_WITH_OLX_PARTNER_TOKEN",
+    "timeoutMs": 15000,
+    "itemsPath": "data.items",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "mapping": {
+      "sourceListingId": "id",
+      "sourceUrl": "links.self",
+      "offerType": "offer.type",
+      "propertyType": "property.type",
+      "plotType": "property.plot_type",
+      "title": "title",
+      "description": "description",
+      "locationText": "location.label",
+      "city": "location.city",
+      "district": "location.district",
+      "voivodeship": "location.region",
+      "price": "price.value",
+      "pricePerM2": "price.per_m2",
+      "areaM2": "property.area_m2",
+      "plotAreaM2": "property.plot_area_m2",
+      "rooms": "property.rooms",
+      "marketType": "property.market_type",
+      "latitude": "location.lat",
+      "longitude": "location.lng",
+      "images": "media.images",
+      "contactName": "contact.name",
+      "contactPhone": "contact.phone",
+      "agencyName": "agency.name",
+      "publishedAtSource": "published_at"
+    }
+  }
+}

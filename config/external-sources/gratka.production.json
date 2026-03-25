@@ -1,0 +1,41 @@
+{
+  "name": "Gratka",
+  "code": "gratka",
+  "baseUrl": "https://gratka.pl",
+  "isActive": true,
+  "config": {
+    "mode": "feed",
+    "feedUrl": "https://PARTNER_DOMAIN_OR_PROVIDER/api/gratka/feed.json",
+    "timeoutMs": 15000,
+    "itemsPath": "offers",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "mapping": {
+      "sourceListingId": "external_id",
+      "sourceUrl": "permalink",
+      "offerType": "offer_type",
+      "propertyType": "category.property_type",
+      "plotType": "category.plot_type",
+      "title": "headline",
+      "description": "content",
+      "locationText": "location.full",
+      "city": "location.city",
+      "district": "location.district",
+      "voivodeship": "location.voivodeship",
+      "price": "price.amount",
+      "pricePerM2": "price.per_m2",
+      "areaM2": "metrics.area_m2",
+      "plotAreaM2": "metrics.plot_area_m2",
+      "rooms": "metrics.rooms",
+      "marketType": "market_type",
+      "latitude": "geo.lat",
+      "longitude": "geo.lng",
+      "images": "media.images",
+      "contactName": "contact.person",
+      "contactPhone": "contact.phone",
+      "agencyName": "agency.name",
+      "publishedAtSource": "published_at"
+    }
+  }
+}

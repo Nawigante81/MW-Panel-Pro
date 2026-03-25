@@ -1,0 +1,17 @@
+import { chromium } from '@playwright/test';
+const email = `pdf3.${Date.now()}@mwpanel.pl`;
+const password = 'Haslo12345!';
+await fetch('http://127.0.0.1:8787/api/auth/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password,firstName:'Pdf',lastName:'Three'})});
+const browser = await chromium.launch({headless:true});
+const page = await browser.newPage();
+page.on('response', r=>{ if(r.url().includes('/api/documents')) console.log('RESP',r.status(),r.url())});
+await page.goto('http://127.0.0.1:4173/login');
+await page.fill('input[type="email"]', email);
+await page.fill('input[type="password"]', password);
+await page.click('button[type="submit"]');
+await page.waitForTimeout(1000);
+await page.goto('http://127.0.0.1:4173/generator');
+await page.waitForTimeout(1000);
+await page.click('button:has-text("UP")');
+await page.waitForTimeout(3000);
+await browser.close();

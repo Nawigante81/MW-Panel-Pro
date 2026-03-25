@@ -1,0 +1,41 @@
+{
+  "name": "Otodom",
+  "code": "otodom",
+  "baseUrl": "https://www.otodom.pl",
+  "isActive": true,
+  "config": {
+    "mode": "feed",
+    "feedUrl": "https://PARTNER_DOMAIN_OR_PROVIDER/api/otodom/feed.json",
+    "timeoutMs": 15000,
+    "itemsPath": "items",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "mapping": {
+      "sourceListingId": "id",
+      "sourceUrl": "url",
+      "offerType": "offer_type",
+      "propertyType": "property_type",
+      "plotType": "plot_type",
+      "title": "title",
+      "description": "description",
+      "locationText": "location.full",
+      "city": "location.city",
+      "district": "location.district",
+      "voivodeship": "location.voivodeship",
+      "price": "price.amount",
+      "pricePerM2": "price.price_per_m2",
+      "areaM2": "area_m2",
+      "plotAreaM2": "plot_area_m2",
+      "rooms": "rooms",
+      "marketType": "market_type",
+      "latitude": "geo.lat",
+      "longitude": "geo.lng",
+      "images": "images",
+      "contactName": "contact.name",
+      "contactPhone": "contact.phone",
+      "agencyName": "agency.name",
+      "publishedAtSource": "published_at"
+    }
+  }
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{document_title}}</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 16mm 20mm 16mm;
+    @bottom-right {
+      content: "Strona " counter(page) " / " counter(pages);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #666;
+    }
+    @bottom-left {
+      content: "MWPanel CRM";
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #666;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.55; color: #1a1a1a; }
+  .watermark { position: fixed; top: 34%; left: 50%; transform: translate(-50%, -50%) rotate(-16deg); opacity: .035; z-index: 0; pointer-events: none; }
+  .content { position: relative; z-index: 2; }
+  .header { display: table; width: 100%; border-bottom: 2px solid #009fe3; padding-bottom: 14px; margin-bottom: 20px; }
+  .header-left, .header-right { display: table-cell; vertical-align: middle; }
+  .header-left { width: 34%; }
+  .header-right { width: 66%; text-align: right; font-size: 11px; color: #4b5563; line-height: 1.55; }
+  .agency-name { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+  .doc-type { margin-top: 12px; margin-bottom: 6px; font-size: 24px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: #111827; }
+  .doc-subtitle { font-size: 11px; color: #6b7280; margin-bottom: 18px; }
+  .info-bar { width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #d9e8f0; background: #f8fbfd; }
+  .info-bar td { padding: 9px 10px; font-size: 11px; border-right: 1px solid #d9e8f0; vertical-align: top; }
+  .info-bar td:last-child { border-right: none; }
+  .meta-label { display: block; font-weight: 700; color: #374151; margin-bottom: 2px; }
+  .section { margin-top: 18px; }
+  .section-title { font-size: 12px; font-weight: 700; color: #009fe3; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: .45px; }
+  .box { border: 1px solid #dddddd; padding: 10px 12px; background: #fff; }
+  .data-table, .property-grid, .signatures { width: 100%; border-collapse: collapse; }
+  .data-table td { padding: 7px 6px; vertical-align: top; border-bottom: 1px solid #ececec; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .label { width: 42%; font-weight: 700; color: #374151; white-space: nowrap; }
+  .two-col { width: 100%; border-collapse: separate; border-spacing: 12px 0; margin-left: -12px; margin-right: -12px; }
+  .two-col td { width: 50%; vertical-align: top; }
+  .property-grid td { border: 1px solid #e5e7eb; padding: 8px 10px; vertical-align: top; }
+  .property-grid .head { background: #f9fafb; font-weight: 700; color: #374151; width: 22%; }
+  .terms { border: 1px solid #dddddd; padding: 12px 14px; background: #fff; }
+  .terms p { margin: 0 0 9px 0; text-align: justify; }
+  .terms p:last-child { margin-bottom: 0; }
+  .small { font-size: 11px; }
+  .footer { margin-top: 24px; padding-top: 10px; border-top: 1px solid #dddddd; font-size: 10px; color: #6b7280; display: table; width: 100%; }
+  .footer-left, .footer-right { display: table-cell; vertical-align: middle; }
+  .footer-right { text-align: right; }
+  .signatures { margin-top: 42px; table-layout: fixed; }
+  .signatures td { width: 33.33%; text-align: center; vertical-align: bottom; padding: 0 10px; }
+  .sign-space { height: 58px; }
+  .sign-line { border-top: 1px solid #374151; margin: 0 auto 8px auto; width: 90%; }
+  .sign-label { font-size: 11px; color: #374151; }
+  .break-inside-avoid { page-break-inside: avoid; break-inside: avoid; }
+</style>
+</head>
+<body>
+  <div class="watermark">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 340" width="520" aria-label="MW">
+      <path fill="#009fe3" d="M677.75,2H583.57l43.54,206.36h.95ZM878,2H784.24l49.23,206.36h.95Zm30.29,337.93h43.22L1050.39,2h-43.23Zm-224.34,0h93.24L731.24,152.51h-1ZM98.45,2,0,339.93H129.21l43.54-206.36h.95l49.7,206.36H329.89l49.22-206.36h.95L423.6,339.93H552.81L454.36,2H322.79L276.88,189.42h-.95L229.55,2Z"/>
+    </svg>
+  </div>
+  <div class="content">
+    <div class="header break-inside-avoid">
+      <div class="header-left">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 340" width="190" aria-label="MW">
+          <path fill="#009fe3" d="M677.75,2H583.57l43.54,206.36h.95ZM878,2H784.24l49.23,206.36h.95Zm30.29,337.93h43.22L1050.39,2h-43.23Zm-224.34,0h93.24L731.24,152.51h-1ZM98.45,2,0,339.93H129.21l43.54-206.36h.95l49.7,206.36H329.89l49.22-206.36h.95L423.6,339.93H552.81L454.36,2H322.79L276.88,189.42h-.95L229.55,2Z"/>
+        </svg>
+      </div>
+      <div class="header-right">
+        <div class="agency-name">{{agency_name}}</div>
+        <div>{{agency_address}}</div>
+        <div>NIP: {{agency_nip}}</div>
+        <div>tel. {{agency_phone}} • email: {{agency_email}}</div>
+        <div>{{agency_website}}</div>
+      </div>
+    </div>
+
+    <div class="doc-type">{{document_title}}</div>
+    <div class="doc-subtitle">Dokument wygenerowany automatycznie w systemie MWPanel CRM</div>
+
+    <table class="info-bar break-inside-avoid">
+      <tr>
+        <td><span class="meta-label">Nr dokumentu</span>{{document_number}}</td>
+        <td><span class="meta-label">Data wystawienia</span>{{date}}</td>
+        <td><span class="meta-label">Miejsce</span>{{document_place}}</td>
+        <td><span class="meta-label">Status</span>{{document_status}}</td>
+      </tr>
+    </table>
+
+    
+<table class="two-col">
+  <tr>
+    <td>
+      <div class="section break-inside-avoid">
+        <div class="section-title">Zamawiający</div>
+        <div class="box">
+          <table class="data-table">
+            <tr><td class="label">Imię i nazwisko / firma</td><td>{{client_name}}</td></tr>
+            <tr><td class="label">Telefon</td><td>{{client_phone}}</td></tr>
+            <tr><td class="label">Email</td><td>{{client_email}}</td></tr>
+            <tr><td class="label">Adres</td><td>{{client_address}}</td></tr>
+            <tr><td class="label">PESEL / NIP</td><td>{{client_identifier}}</td></tr>
+          </table>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="section break-inside-avoid">
+        <div class="section-title">Pośrednik</div>
+        <div class="box">
+          <table class="data-table">
+            <tr><td class="label">Agencja</td><td>{{agency_name}}</td></tr>
+            <tr><td class="label">Agent</td><td>{{agent_name}}</td></tr>
+            <tr><td class="label">Telefon</td><td>{{agent_phone}}</td></tr>
+            <tr><td class="label">Email</td><td>{{agent_email}}</td></tr>
+            <tr><td class="label">Licencja / ID</td><td>{{agent_license}}</td></tr>
+          </table>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div class="section break-inside-avoid">
+  <div class="section-title">Przedmiot umowy</div>
+  <table class="property-grid">
+    <tr><td class="head">Adres</td><td>{{property_address}}</td><td class="head">Typ</td><td>{{property_type}}</td></tr>
+    <tr><td class="head">Powierzchnia</td><td>{{property_area}}</td><td class="head">Liczba pokoi</td><td>{{property_rooms}}</td></tr>
+    <tr><td class="head">Cena ofertowa</td><td>{{property_price}}</td><td class="head">Rynek</td><td>{{property_market}}</td></tr>
+    <tr><td class="head">Nr oferty</td><td>{{property_reference}}</td><td class="head">Stan prawny</td><td>{{property_legal_status}}</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Postanowienia</div>
+  <div class="terms">
+    <p>1. Zamawiający zleca, a Pośrednik zobowiązuje się do wykonania czynności pośrednictwa w obrocie nieruchomościami dotyczących nieruchomości wskazanej w niniejszym dokumencie.</p>
+    <p>2. Pośrednik będzie podejmował działania marketingowe, organizacyjne i handlowe zmierzające do sprzedaży / najmu nieruchomości.</p>
+    <p>3. Wynagrodzenie pośrednika, termin obowiązywania oraz warunki współpracy: <b>{{document_terms}}</b>.</p>
+    <p>4. Dodatkowe uwagi stron: <b>{{document_notes}}</b>.</p>
+  </div>
+</div>
+
+<table class="signatures break-inside-avoid">
+  <tr>
+    <td><div class="sign-space"></div><div class="sign-line"></div><div class="sign-label">Zamawiający</div></td>
+    <td><div class="sign-space"></div><div class="sign-line"></div><div class="sign-label">Agent prowadzący</div></td>
+    <td><div class="sign-space"></div><div class="sign-line"></div><div class="sign-label">W imieniu {{agency_name}}</div></td>
+  </tr>
+</table>
+
+
+    <div class="footer">
+      <div class="footer-left">MWPanel CRM • {{agency_name}} • {{agency_phone}} • {{agency_email}}</div>
+      <div class="footer-right">ID dokumentu: {{document_id}}</div>
+    </div>
+  </div>
+</body>
+</html>
+
+</body></html>
