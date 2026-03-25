@@ -7,7 +7,7 @@ import { ExternalListing } from '../../types'
 const SAVED_KEY = 'mw.market.saved-offers'
 const IGNORED_KEY = 'mw.market.ignored-offers'
 const REGION_KEY = 'mw.market.region-filter'
-const DEFAULT_REGION = 'pomorskie'
+const DEFAULT_REGION = 'all'
 const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-main)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]'
 
 const sourceLabel = (item: ExternalListing) => {
@@ -138,9 +138,8 @@ export default function MarketOffersCompactWidget({ compactDefault = true }: Pro
             className={`text-xs px-2 py-1 rounded border border-[#31425f] bg-[#0f172a] text-[#d2dceb] ${FOCUS_RING}`}
             aria-label="Filtr województwa"
           >
-            <option value="pomorskie">Pomorskie (domyślnie)</option>
             <option value="all">Cała Polska</option>
-            {voivodeships.filter((v) => v !== 'pomorskie').map((v) => (
+            {voivodeships.map((v) => (
               <option key={v} value={v}>{v[0].toUpperCase() + v.slice(1)}</option>
             ))}
           </select>
