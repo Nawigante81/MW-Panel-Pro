@@ -111,6 +111,13 @@ const DEFAULT_LISTING_STATS: ListingStats = {
 
 const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-main)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]'
 
+const hasPartialImport = (listing: any) => {
+  const tags = Array.isArray(listing?.tags) ? listing.tags : []
+  const publicationStatus = listing?.publicationStatus && typeof listing.publicationStatus === 'object' ? listing.publicationStatus : {}
+  const importMeta = publicationStatus.importMeta && typeof publicationStatus.importMeta === 'object' ? publicationStatus.importMeta : null
+  return tags.includes('partial_import') || Boolean(importMeta?.isPartial)
+}
+
 const Dashboard = () => {
   const { clients, properties, documents, activities, tasks, listings, leads, loading } = useDataStore()
   const { profile, user, agency } = useAuthStore()
@@ -349,6 +356,8 @@ const Dashboard = () => {
     return withReason.slice(0, 5)
   }, [dashboardExceptions, listings, propertyById])
 
+  const partialImportListingsCount = useMemo(() => listings.filter((listing) => hasPartialImport(listing)).length, [listings])
+
   const offersNeedingAttentionCount = dashboardExceptions?.offersNeedingAttentionCount ?? listingsAttentionItems.length
   const leadFollowupsOverdueCount = Number(leadFollowups?.overdueCount || 0)
   const leadFollowupsTodayCount = Number(leadFollowups?.todayCount || 0)
@@ -558,6 +567,9 @@ const Dashboard = () => {
                 <p className="text-xl font-semibold text-[#f1f5f9]">{offersNeedingAttentionCount}</p>
                 <p className="text-xs text-[#cbd5e1]">{offersNeedingAttentionCount === 0 ? 'Brak wyjątków' : 'Pokaż listę i powody'}</p>
               </button>
+              <Link to="/nieruchomosci?import=partial" className={`mt-2 inline-flex items-center gap-1 text-xs text-amber-300 hover:text-amber-200 ${FOCUS_RING}`}>
+                Oferty z danymi częściowymi: {partialImportListingsCount} <ArrowRight size={12} />
+              </Link>
               {showAttentionList && (
                 <div className="mt-2 space-y-1.5">
                   {listingsAttentionItems.length === 0 ? <p className="text-xs text-[#9fb0c5]">Brak pozycji wymagających reakcji.</p> : listingsAttentionItems.map((item) => (
@@ -609,10 +621,11 @@ const Dashboard = () => {
       )}
 
       {hasWidget('stats') && (
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {[
             { label: 'Wszystkie oferty', value: effectiveStats.totalOffers, to: '/nieruchomosci', helper: 'Pełny portfel ofert' },
             { label: 'Oferty wygasające', value: effectiveStats.expiringOffers, to: '/nieruchomosci?filter=expiring', helper: 'Publikacje do odświeżenia' },
+            { label: 'Oferty z danymi częściowymi', value: partialImportListingsCount, to: '/nieruchomosci?import=partial', helper: 'Importy wymagające uzupełnienia' },
             { label: 'Klienci', value: clients.length, to: '/klienci', helper: 'Baza aktywnych klientów' },
             { label: 'Drafty do publikacji', value: normalizedListingBuckets.draft, to: '/nieruchomosci?filter=draft', helper: 'Oferty nieopublikowane' },
           ].map((stat) => (

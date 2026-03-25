@@ -157,16 +157,70 @@ const mapExternalListing = (row) => ({
   updatedAt: row.updated_at,
 })
 
-const mapSource = (row) => ({
+const deriveSourceHealth = (row) => {
+  const status = String(row?.last_status || '').toLowerCase()
+  const lastSyncAt = row?.last_sync_at ? new Date(row.last_sync_at).getTime() : NaN
+  const staleMs = 2 * 60 * 60 * 1000
+  const isStale = Number.isFinite(lastSyncAt) ? (Date.now() - lastSyncAt > staleMs) : true
+  if (status === 'failed') return { health: 'error', stale: isStale }
+  if (status === 'retrying' || status === 'running') return { health: 'warning', stale: isStale }
+  if (isStale && row?.is_active === 1) return { health: 'warning', stale: true }
+  if (status === 'success' || status === 'partial') return { health: status === 'partial' ? 'warning' : 'ok', stale: false }
+  return { health: row?.is_active === 1 ? 'warning' : 'idle', stale: isStale }
+}
+
+const mapSource = (row) => {
+  const derived = deriveSourceHealth(row)
+  return {
+    id: row.id,
+    name: row.name,
+    code: row.code,
+    baseUrl: row.base_url,
+    isActive: row.is_active === 1,
+    config: safeJsonParse(row.config_json, {}),
+    lastSyncAt: row.last_sync_at,
+    lastStatus: row.last_status,
+    lastError: row.last_error,
+    health: derived.health,
+    stale: derived.stale,
+  }
+}
+
+const IMPORT_JOB_STATUS_MAP = {
+  success: 'successful',
+  successful: 'successful',
+  completed: 'successful',
+  failed: 'failed',
+  error: 'failed',
+  running: 'pending',
+  pending: 'pending',
+  retrying: 'retrying',
+  partial: 'partial',
+  warning: 'warning',
+}
+
+const normalizeImportJobStatus = (status) => {
+  const raw = String(status || '').trim().toLowerCase()
+  return IMPORT_JOB_STATUS_MAP[raw] || raw || 'pending'
+}
+
+const mapImportJob = (row) => ({
   id: row.id,
-  name: row.name,
-  code: row.code,
-  baseUrl: row.base_url,
-  isActive: row.is_active === 1,
-  config: safeJsonParse(row.config_json, {}),
-  lastSyncAt: row.last_sync_at,
-  lastStatus: row.last_status,
-  lastError: row.last_error,
+  sourceId: row.source_id,
+  sourceName: row.source_name,
+  sourceCode: row.source_code,
+  startedAt: row.started_at,
+  finishedAt: row.finished_at,
+  status: normalizeImportJobStatus(row.status),
+  rawStatus: row.status,
+  processedCount: row.processed_count,
+  newCount: row.new_count,
+  updatedCount: row.updated_count,
+  inactiveCount: row.inactive_count,
+  retryCount: Number(row.retry_count || 0),
+  errorReason: row.error_reason || null,
+  errorMessage: row.error_message || row.error_log || null,
+  errorLog: row.error_log,
 })
 
 const createNotificationForAgency = (db, agencyId, title, message) => {
@@ -271,6 +325,21 @@ const sanitizeUrl = (url) => {
   if (!value) return ''
   if (!value.startsWith('http://') && !value.startsWith('https://')) return ''
   return value
+}
+
+const assessImportCompleteness = (item) => {
+  const missingFields = []
+  if (!normalizeText(item.title)) missingFields.push('title')
+  if (!Number(item.price || 0)) missingFields.push('price')
+  if (!Number(item.areaM2 || 0) && !Number(item.plotAreaM2 || 0)) missingFields.push('area')
+  if (!normalizeText(item.city) && !normalizeText(item.locationText)) missingFields.push('location')
+  if (!Array.isArray(item.imagesJson) || item.imagesJson.length === 0) missingFields.push('images')
+  if (!normalizeText(item.description) || normalizeText(item.description).length < 40) missingFields.push('description')
+  return {
+    isPartial: missingFields.length > 0,
+    missingFields,
+    completenessScore: Math.max(0, 100 - missingFields.length * 15),
+  }
 }
 
 const stripHtml = (html) => String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
@@ -803,12 +872,15 @@ const ADAPTERS = {
 export const runExternalImportJob = async (db, source, opts = {}) => {
   const startedAt = nowIso()
   const jobId = randomUUID()
-  db.prepare(`INSERT INTO import_jobs (id, source_id, started_at, finished_at, status, processed_count, new_count, updated_count, inactive_count, error_log)
-    VALUES (@id,@source_id,@started_at,NULL,@status,0,0,0,0,NULL)`).run({
+  const retryCount = Number(opts.retryCount || 0)
+  db.prepare(`INSERT INTO import_jobs (id, source_id, started_at, finished_at, status, processed_count, new_count, updated_count, inactive_count, error_log, retry_count, error_reason, error_message, parent_job_id)
+    VALUES (@id,@source_id,@started_at,NULL,@status,0,0,0,0,NULL,@retry_count,NULL,NULL,@parent_job_id)`).run({
     id: jobId,
     source_id: source.id,
     started_at: startedAt,
-    status: 'running',
+    status: retryCount > 0 ? 'retrying' : 'running',
+    retry_count: retryCount,
+    parent_job_id: opts.parentJobId || null,
   })
 
   let processed = 0
@@ -836,6 +908,7 @@ export const runExternalImportJob = async (db, source, opts = {}) => {
         if (detailImage) raw.images = [detailImage]
       }
       const n = normalizeExternalListing(raw, source)
+      const completeness = assessImportCompleteness(n)
       if (!n.sourceListingId && !n.sourceUrl) continue
       if (Number(n.price || 0) <= 0) continue
       if (!isLikelyDetailUrl(source.code, n.sourceUrl || '')) continue
@@ -903,7 +976,14 @@ export const runExternalImportJob = async (db, source, opts = {}) => {
           last_seen_at: now,
           status: 'new',
           hash_signature: n.hashSignature,
-          raw_payload_json: JSON.stringify(n.rawPayloadJson || {}),
+          raw_payload_json: JSON.stringify({
+            ...(n.rawPayloadJson || {}),
+            importMeta: {
+              isPartial: completeness.isPartial,
+              missingFields: completeness.missingFields,
+              completenessScore: completeness.completenessScore,
+            },
+          }),
           created_at: now,
           updated_at: now,
         })
@@ -966,7 +1046,14 @@ export const runExternalImportJob = async (db, source, opts = {}) => {
           last_seen_at: now,
           status: oldHash === n.hashSignature ? nextStatus : 'updated',
           hash_signature: n.hashSignature,
-          raw_payload_json: JSON.stringify(n.rawPayloadJson || {}),
+          raw_payload_json: JSON.stringify({
+            ...(n.rawPayloadJson || {}),
+            importMeta: {
+              isPartial: completeness.isPartial,
+              missingFields: completeness.missingFields,
+              completenessScore: completeness.completenessScore,
+            },
+          }),
           updated_at: now,
         })
         if (oldHash !== n.hashSignature) {
@@ -995,8 +1082,9 @@ export const runExternalImportJob = async (db, source, opts = {}) => {
     }
 
     const finishedAt = nowIso()
-    db.prepare('UPDATE import_jobs SET finished_at=?, status=?, processed_count=?, new_count=?, updated_count=?, inactive_count=?, error_log=? WHERE id=?')
-      .run(finishedAt, 'success', processed, created, updated, inactive, null, jobId)
+    const finalStatus = created > 0 && updated === 0 && processed > created ? 'partial' : 'success'
+    db.prepare('UPDATE import_jobs SET finished_at=?, status=?, processed_count=?, new_count=?, updated_count=?, inactive_count=?, error_log=?, error_reason=?, error_message=? WHERE id=?')
+      .run(finishedAt, finalStatus, processed, created, updated, inactive, null, null, null, jobId)
     db.prepare('UPDATE external_sources SET last_sync_at=?, last_status=?, last_error=? WHERE id=?')
       .run(finishedAt, 'success', null, source.id)
 
@@ -1004,7 +1092,14 @@ export const runExternalImportJob = async (db, source, opts = {}) => {
   } catch (error) {
     const finishedAt = nowIso()
     const msg = error instanceof Error ? error.message.slice(0, 3000) : 'Unknown error'
-    db.prepare('UPDATE import_jobs SET finished_at=?, status=?, error_log=? WHERE id=?').run(finishedAt, 'failed', msg, jobId)
+    const reason = /timeout/i.test(msg)
+      ? 'timeout'
+      : /http\s*4\d\d|http\s*5\d\d/i.test(msg)
+        ? 'source_http_error'
+        : /parse|json|html/i.test(msg)
+          ? 'processing_error'
+          : 'import_failed'
+    db.prepare('UPDATE import_jobs SET finished_at=?, status=?, error_log=?, error_reason=?, error_message=? WHERE id=?').run(finishedAt, 'failed', msg, reason, msg, jobId)
     db.prepare('UPDATE external_sources SET last_sync_at=?, last_status=?, last_error=? WHERE id=?').run(finishedAt, 'failed', msg, source.id)
     throw error
   }
@@ -1214,20 +1309,215 @@ export const registerExternalListingRoutes = ({ app, db, requireAuth, sendSucces
       const rows = db.prepare(`SELECT ij.*, es.name as source_name, es.code as source_code
         FROM import_jobs ij LEFT JOIN external_sources es ON es.id = ij.source_id
         ORDER BY ij.started_at DESC LIMIT 200`).all()
-      sendSuccess(req, res, rows.map((r) => ({
-        id: r.id,
-        sourceId: r.source_id,
-        sourceName: r.source_name,
-        sourceCode: r.source_code,
-        startedAt: r.started_at,
-        finishedAt: r.finished_at,
-        status: r.status,
-        processedCount: r.processed_count,
-        newCount: r.new_count,
-        updatedCount: r.updated_count,
-        inactiveCount: r.inactive_count,
-        errorLog: r.error_log,
-      })))
+      sendSuccess(req, res, rows.map(mapImportJob))
+    } catch (e) { next(e) }
+  })
+
+  app.get('/api/monitoring/stats', requireAuth, (req, res, next) => {
+    try {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      const activeListings = db.prepare("SELECT COUNT(1) c FROM external_listings WHERE status IN ('new','active','updated')").get().c
+      const activeSources = db.prepare('SELECT COUNT(1) c FROM external_sources WHERE is_active = 1').get().c
+      const rows = db.prepare(`SELECT ij.*, es.name as source_name, es.code as source_code
+        FROM import_jobs ij
+        LEFT JOIN external_sources es ON es.id = ij.source_id
+        WHERE ij.started_at >= ?
+        ORDER BY ij.started_at DESC`).all(since)
+      const mapped = rows.map(mapImportJob)
+      const failedJobs = mapped.filter((row) => row.status === 'failed')
+      const successfulJobs = mapped.filter((row) => row.status === 'successful')
+      const pendingJobs = mapped.filter((row) => row.status === 'pending' || row.status === 'retrying')
+      const statusCounts = mapped.reduce((acc, row) => {
+        acc[row.status] = Number(acc[row.status] || 0) + 1
+        return acc
+      }, {})
+      const failedJobsBySourceMap = new Map()
+      for (const row of failedJobs) {
+        const key = `${row.sourceCode || 'unknown'}::${row.sourceName || 'Nieznane źródło'}`
+        const current = failedJobsBySourceMap.get(key) || { sourceCode: row.sourceCode || 'unknown', sourceName: row.sourceName || 'Nieznane źródło', count: 0 }
+        current.count += 1
+        failedJobsBySourceMap.set(key, current)
+      }
+      const failedJobsBySource = [...failedJobsBySourceMap.values()].sort((a, b) => b.count - a.count || a.sourceName.localeCompare(b.sourceName, 'pl'))
+      const supportedStatuses = ['successful', 'failed', 'pending', 'retrying', 'partial', 'warning']
+      const sourceHealth = db.prepare('SELECT * FROM external_sources ORDER BY name ASC').all().map(mapSource)
+      const unhealthySources = sourceHealth.filter((source) => source.health === 'error' || source.health === 'warning').length
+      const partialImportListings = db.prepare(`
+        SELECT COUNT(1) as c
+        FROM listings
+        WHERE (tags_json LIKE '%partial_import%' OR publication_status_json LIKE '%"isPartial":true%')
+      `).get().c
+      sendSuccess(req, res, {
+        activeListings,
+        activeSources,
+        successfulJobs24h: successfulJobs.length,
+        failedJobs24h: failedJobs.length,
+        pendingJobs: pendingJobs.length,
+        partialImportListings: Number(partialImportListings || 0),
+        unhealthySources,
+        sourceHealth,
+        failedJobsBySource,
+        statusCounts,
+        supportedStatuses,
+        windowHours: 24,
+      })
+    } catch (e) { next(e) }
+  })
+
+  app.get('/api/monitoring/jobs', requireAuth, (req, res, next) => {
+    try {
+      const page = Math.max(1, Number(req.query.page || 1))
+      const pageSize = Math.min(100, Math.max(1, Number(req.query.pageSize || 20)))
+      const offset = (page - 1) * pageSize
+      const where = []
+      const params = []
+      if (req.query.status) {
+        const requested = normalizeImportJobStatus(req.query.status)
+        const matchingRawStatuses = Object.entries(IMPORT_JOB_STATUS_MAP).filter(([, normalized]) => normalized === requested).map(([raw]) => raw)
+        if (matchingRawStatuses.length > 0) {
+          where.push(`LOWER(ij.status) IN (${matchingRawStatuses.map(() => '?').join(',')})`)
+          params.push(...matchingRawStatuses)
+        }
+      }
+      if (req.query.source) {
+        where.push('LOWER(es.code) = ?')
+        params.push(String(req.query.source).toLowerCase())
+      }
+      const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : ''
+      const totalRow = db.prepare(`SELECT COUNT(1) as c
+        FROM import_jobs ij
+        LEFT JOIN external_sources es ON es.id = ij.source_id
+        ${whereSql}`).get(...params)
+      const rows = db.prepare(`SELECT ij.*, es.name as source_name, es.code as source_code
+        FROM import_jobs ij
+        LEFT JOIN external_sources es ON es.id = ij.source_id
+        ${whereSql}
+        ORDER BY COALESCE(ij.finished_at, ij.started_at) DESC
+        LIMIT ? OFFSET ?`).all(...params, pageSize, offset)
+      const items = rows.map((row) => ({
+        ...mapImportJob(row),
+        details: {
+          startedAt: row.started_at,
+          finishedAt: row.finished_at,
+          processedCount: row.processed_count,
+          newCount: row.new_count,
+          updatedCount: row.updated_count,
+          inactiveCount: row.inactive_count,
+          errorLog: row.error_log,
+        },
+      }))
+      sendSuccess(req, res, {
+        items,
+        total: Number(totalRow?.c || 0),
+        page,
+        pageSize,
+        hasMore: offset + items.length < Number(totalRow?.c || 0),
+        supportedStatuses: ['successful', 'failed', 'pending', 'retrying', 'partial', 'warning'],
+      })
+    } catch (e) { next(e) }
+  })
+
+  app.get('/api/monitoring/sources-summary', requireAuth, (req, res, next) => {
+    try {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      const sources = db.prepare('SELECT * FROM external_sources ORDER BY name ASC').all().map(mapSource)
+      const jobs24h = db.prepare(`SELECT ij.*, es.name as source_name, es.code as source_code
+        FROM import_jobs ij
+        LEFT JOIN external_sources es ON es.id = ij.source_id
+        WHERE ij.started_at >= ?
+        ORDER BY ij.started_at DESC`).all(since)
+      const listingsRows = db.prepare(`SELECT source_id,
+        COUNT(1) as total,
+        SUM(CASE WHEN status IN ('new','active','updated') THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN raw_payload_json LIKE '%"isPartial":true%' THEN 1 ELSE 0 END) as partial
+        FROM external_listings
+        GROUP BY source_id`).all()
+      const listingsMap = new Map(listingsRows.map((row) => [row.source_id, row]))
+      const jobsBySource = new Map()
+      for (const job of jobs24h) {
+        if (!job.source_id) continue
+        if (!jobsBySource.has(job.source_id)) jobsBySource.set(job.source_id, [])
+        jobsBySource.get(job.source_id).push(job)
+      }
+      const items = sources.map((source) => {
+        const sourceJobs = (jobsBySource.get(source.id) || []).map(mapImportJob)
+        const normalized = sourceJobs.map((job) => job.status)
+        const listingStats = listingsMap.get(source.id) || {}
+        const failed = normalized.filter((status) => status === 'failed').length
+        const successful = normalized.filter((status) => status === 'successful').length
+        const totalDone = failed + successful
+        const successRate24h = totalDone > 0 ? Math.round((successful / totalDone) * 100) : null
+        return {
+          source,
+          stats24h: {
+            successful,
+            failed,
+            pending: normalized.filter((status) => status === 'pending').length,
+            retrying: normalized.filter((status) => status === 'retrying').length,
+            partial: normalized.filter((status) => status === 'partial').length,
+            warning: normalized.filter((status) => status === 'warning').length,
+            successRate24h,
+          },
+          listings: {
+            total: Number(listingStats.total || 0),
+            active: Number(listingStats.active || 0),
+            partial: Number(listingStats.partial || 0),
+          },
+          latestJob: sourceJobs[0] || null,
+        }
+      })
+      sendSuccess(req, res, { items })
+    } catch (e) { next(e) }
+  })
+
+  app.get('/api/monitoring/sources/:id', requireAuth, (req, res, next) => {
+    try {
+      const source = db.prepare('SELECT * FROM external_sources WHERE id = ? LIMIT 1').get(req.params.id)
+      if (!source) return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'Source not found' }, requestId: req.requestId })
+      const mappedSource = mapSource(source)
+      const recentJobs = db.prepare(`SELECT ij.*, es.name as source_name, es.code as source_code
+        FROM import_jobs ij
+        LEFT JOIN external_sources es ON es.id = ij.source_id
+        WHERE ij.source_id = ?
+        ORDER BY COALESCE(ij.finished_at, ij.started_at) DESC
+        LIMIT 10`).all(source.id).map(mapImportJob)
+      const stats24hRows = db.prepare(`SELECT * FROM import_jobs WHERE source_id = ? AND started_at >= ? ORDER BY started_at DESC`).all(source.id, new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      const normalized24h = stats24hRows.map((row) => normalizeImportJobStatus(row.status))
+      const listingsStats = db.prepare(`SELECT
+        COUNT(1) as total,
+        SUM(CASE WHEN status IN ('new','active','updated') THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN raw_payload_json LIKE '%"isPartial":true%' THEN 1 ELSE 0 END) as partial
+        FROM external_listings
+        WHERE source_id = ?`).get(source.id)
+      sendSuccess(req, res, {
+        source: mappedSource,
+        stats24h: {
+          successful: normalized24h.filter((status) => status === 'successful').length,
+          failed: normalized24h.filter((status) => status === 'failed').length,
+          pending: normalized24h.filter((status) => status === 'pending').length,
+          retrying: normalized24h.filter((status) => status === 'retrying').length,
+          partial: normalized24h.filter((status) => status === 'partial').length,
+          warning: normalized24h.filter((status) => status === 'warning').length,
+        },
+        listings: {
+          total: Number(listingsStats?.total || 0),
+          active: Number(listingsStats?.active || 0),
+          partial: Number(listingsStats?.partial || 0),
+        },
+        recentJobs,
+      })
+    } catch (e) { next(e) }
+  })
+
+  app.post('/api/monitoring/jobs/:id/retry', requireAuth, async (req, res, next) => {
+    try {
+      const jobId = req.params.id
+      const existing = db.prepare('SELECT * FROM import_jobs WHERE id = ? LIMIT 1').get(jobId)
+      if (!existing) return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'Job not found' }, requestId: req.requestId })
+      const source = existing.source_id ? db.prepare('SELECT * FROM external_sources WHERE id = ? LIMIT 1').get(existing.source_id) : null
+      if (!source) return res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'Source not found for job' }, requestId: req.requestId })
+      const result = await runExternalImportJob(db, source, { manual: true, retryCount: Number(existing.retry_count || 0) + 1, parentJobId: existing.id })
+      sendSuccess(req, res, { retried: true, sourceId: source.id, previousJobId: existing.id, ...result })
     } catch (e) { next(e) }
   })
 
@@ -1353,6 +1643,14 @@ export const registerExternalListingRoutes = ({ app, db, requireAuth, sendSucces
       }
 
       const importedStatus = ['active', 'new', 'updated'].includes(String(listing.status || '').toLowerCase()) ? 'active' : 'draft'
+      const externalPayload = safeJsonParse(listing.raw_payload_json, {})
+      const importMeta = externalPayload.importMeta || {}
+      const partialMissingFields = Array.isArray(importMeta.missingFields) ? importMeta.missingFields : []
+      const importTags = ['external_import']
+      if (importMeta.isPartial) importTags.push('partial_import')
+      const importNoteSuffix = importMeta.isPartial && partialMissingFields.length > 0
+        ? ` | Partial import: missing ${partialMissingFields.join(', ')}`
+        : ''
       const listingPayload = {
         id: listingId,
         propertyId,
@@ -1371,9 +1669,16 @@ export const registerExternalListingRoutes = ({ app, db, requireAuth, sendSucces
         soldAt: null,
         views: 0,
         inquiries: 0,
-        publicationStatusJson: JSON.stringify({ importedExternalListingId: id }),
-        notes: 'Imported from external listing module',
-        tagsJson: JSON.stringify(['external_import']),
+        publicationStatusJson: JSON.stringify({
+          importedExternalListingId: id,
+          importMeta: {
+            isPartial: Boolean(importMeta.isPartial),
+            missingFields: partialMissingFields,
+            completenessScore: Number(importMeta.completenessScore || 0),
+          },
+        }),
+        notes: `Imported from external listing module${importNoteSuffix}`,
+        tagsJson: JSON.stringify(importTags),
         createdAt: now,
         updatedAt: now,
       }

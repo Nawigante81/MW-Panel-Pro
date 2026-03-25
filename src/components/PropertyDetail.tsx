@@ -13,6 +13,15 @@ import { useDataStore } from '../store/dataStore'
 import { ListingStatus } from '../types'
 import { apiFetch } from '../utils/apiClient'
 
+const getPartialImportMeta = (listing: any) => {
+  const tags = Array.isArray(listing?.tags) ? listing.tags : []
+  const publicationStatus = listing?.publicationStatus && typeof listing.publicationStatus === 'object' ? listing.publicationStatus : {}
+  const importMeta = publicationStatus.importMeta && typeof publicationStatus.importMeta === 'object' ? publicationStatus.importMeta : null
+  const missingFields = Array.isArray(importMeta?.missingFields) ? importMeta.missingFields : []
+  const isPartial = tags.includes('partial_import') || Boolean(importMeta?.isPartial)
+  return { isPartial, missingFields, completenessScore: Number(importMeta?.completenessScore || 0) }
+}
+
 type DraftState = {
   // listing
   listingPrice: string
@@ -167,6 +176,11 @@ const PropertyDetail = () => {
     return first?.url || ''
   }, [property?.media])
 
+  const partialImport = useMemo(() => getPartialImportMeta(listing), [listing])
+  const partialImportTitle = partialImport.isPartial
+    ? `Oferta została zaimportowana częściowo${partialImport.missingFields.length ? ` — brakuje: ${partialImport.missingFields.join(', ')}` : '.'}`
+    : ''
+
   const getStatusBadge = (status: string) => {
     const styles = {
       active: 'bg-green-100 text-green-800',
@@ -270,7 +284,10 @@ const PropertyDetail = () => {
           <ArrowLeft size={20} />
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-800">{draft.propertyType} • {draft.city}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-800">{draft.propertyType} • {draft.city}</h1>
+            {partialImport.isPartial ? <span title={partialImportTitle} className="px-2 py-1 rounded-full text-xs font-medium border border-amber-300 bg-amber-50 text-amber-700">Dane częściowe</span> : null}
+          </div>
           <p className="text-gray-600">{listing.listingNumber}</p>
         </div>
         <div className="flex gap-2">
@@ -391,6 +408,18 @@ const PropertyDetail = () => {
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold mb-4">Status oferty</h2>
+            {partialImport.isPartial ? (
+              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                <p className="font-medium">Import częściowy</p>
+                <p className="mt-1">Ta oferta została zaimportowana z brakami danych.</p>
+                {partialImport.missingFields.length > 0 ? (
+                  <p className="mt-1 text-xs">Brakujące pola: {partialImport.missingFields.join(', ')}.</p>
+                ) : null}
+                {partialImport.completenessScore > 0 ? (
+                  <p className="mt-1 text-xs">Szacowana kompletność: {partialImport.completenessScore}%.</p>
+                ) : null}
+              </div>
+            ) : null}
             {isEditing ? (
               <select
                 title="Status oferty"

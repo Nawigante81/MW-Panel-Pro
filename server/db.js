@@ -676,10 +676,15 @@ CREATE TABLE IF NOT EXISTS import_jobs (
   updated_count INTEGER NOT NULL DEFAULT 0,
   inactive_count INTEGER NOT NULL DEFAULT 0,
   error_log TEXT,
+  retry_count INTEGER NOT NULL DEFAULT 0,
+  error_reason TEXT,
+  error_message TEXT,
+  parent_job_id TEXT,
   FOREIGN KEY(source_id) REFERENCES external_sources(id)
 );
 CREATE INDEX IF NOT EXISTS idx_import_jobs_source_id ON import_jobs(source_id);
 CREATE INDEX IF NOT EXISTS idx_import_jobs_started_at ON import_jobs(started_at);
+CREATE INDEX IF NOT EXISTS idx_import_jobs_status_started_at ON import_jobs(status, started_at);
 
 CREATE TABLE IF NOT EXISTS market_alerts (
   id TEXT PRIMARY KEY,
@@ -914,6 +919,10 @@ ensureColumn('transaction_checklist_items', 'completed_at', 'TEXT');
 ensureColumn('transaction_checklist_items', 'completed_by', 'TEXT');
 ensureColumn('transaction_checklist_items', 'linked_document_id', 'TEXT');
 ensureColumn('transaction_checklist_items', 'notes', 'TEXT');
+ensureColumn('import_jobs', 'retry_count', 'INTEGER NOT NULL DEFAULT 0');
+ensureColumn('import_jobs', 'error_reason', 'TEXT');
+ensureColumn('import_jobs', 'error_message', 'TEXT');
+ensureColumn('import_jobs', 'parent_job_id', 'TEXT');
 
 ensureColumn('transactions', 'ai_win_probability', 'REAL');
 ensureColumn('transactions', 'ai_score_updated_at', 'TEXT');

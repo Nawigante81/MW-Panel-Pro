@@ -1,1 +1,11 @@
 node_modules
+data/*.sqlite
+data/*.sqlite-*
+data/*.db
+*.wal
+*.shm
+data/*.sqlite
+data/*.sqlite-*
+data/*.db
+*.wal
+*.shm

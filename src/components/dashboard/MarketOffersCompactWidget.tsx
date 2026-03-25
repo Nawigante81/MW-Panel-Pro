@@ -147,7 +147,10 @@ export default function MarketOffersCompactWidget({ compactDefault = true }: Pro
           <button onClick={() => setCompactMode((v) => !v)} className={`text-xs px-2 py-1 rounded border border-[#31425f] text-[#d2dceb] hover:bg-[#18243b] ${FOCUS_RING}`}>
             {compactMode ? 'Pokaż galerię' : 'Widok kompakt'}
           </button>
-          <Link to="/market" className={`text-xs text-[#b7c3d4] hover:text-[#f1f5f9] ${FOCUS_RING}`}>Zobacz wszystkie</Link>
+          <div className="flex items-center gap-2">
+            <Link to="/nieruchomosci?import=partial" className={`text-xs text-amber-300 hover:text-amber-200 ${FOCUS_RING}`}>Dane częściowe w CRM</Link>
+            <Link to="/market" className={`text-xs text-[#b7c3d4] hover:text-[#f1f5f9] ${FOCUS_RING}`}>Zobacz wszystkie</Link>
+          </div>
         </div>
       </div>
 

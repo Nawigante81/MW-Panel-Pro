@@ -20,6 +20,15 @@ import { cn } from '../utils/cn'
 import ContextHelpButton from './ContextHelpButton'
 import { getContextHelp } from './helpContent'
 
+const getPartialImportMeta = (listing: any) => {
+  const tags = Array.isArray(listing?.tags) ? listing.tags : []
+  const publicationStatus = listing?.publicationStatus && typeof listing.publicationStatus === 'object' ? listing.publicationStatus : {}
+  const importMeta = publicationStatus.importMeta && typeof publicationStatus.importMeta === 'object' ? publicationStatus.importMeta : null
+  const missingFields = Array.isArray(importMeta?.missingFields) ? importMeta.missingFields : []
+  const isPartial = tags.includes('partial_import') || Boolean(importMeta?.isPartial)
+  return { isPartial, missingFields }
+}
+
 const Properties = () => {
   const { listings, loading, fetchListings, fetchProperties, deleteListing, addProperty, addListing, getAgencyId } = useDataStore()
   const [searchTerm, setSearchTerm] = useState('')
@@ -48,11 +57,20 @@ const Properties = () => {
 
   const quickScope = searchParams.get('scope') || 'all'
   const sourceScope = searchParams.get('source') || 'all'
+  const importScope = searchParams.get('import') || 'all'
 
   const clearQuickFilters = () => {
     const next = new URLSearchParams(searchParams)
     next.delete('scope')
     next.delete('source')
+    next.delete('import')
+    setSearchParams(next)
+  }
+
+  const setImportScopeFilter = (value: 'all' | 'partial') => {
+    const next = new URLSearchParams(searchParams)
+    if (value === 'partial') next.set('import', 'partial')
+    else next.delete('import')
     setSearchParams(next)
   }
 
@@ -167,14 +185,17 @@ const Properties = () => {
       const tags = Array.isArray((prop as any).tags) ? (prop as any).tags : []
       const isImported = tags.includes('external_import') || String((prop as any).notes || '').toLowerCase().includes('imported from external listing')
 
+      const partialImport = getPartialImportMeta(prop)
+
       const matchesScope =
         quickScope === 'new7d' ? isNew7d
         : quickScope === 'expiring' ? isExpiring
         : true
 
       const matchesSourceScope = sourceScope === 'imported' ? isImported : true
+      const matchesImportScope = importScope === 'partial' ? partialImport.isPartial : true
 
-      return matchesSearch && matchesType && matchesStatus && matchesScope && matchesSourceScope
+      return matchesSearch && matchesType && matchesStatus && matchesScope && matchesSourceScope && matchesImportScope
     })
     .sort((a, b) => {
       if (sortBy === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -183,7 +204,7 @@ const Properties = () => {
       if (sortBy === 'price-desc') return b.price - a.price
       return 0
     })
-  , [filterStatus, filterType, listings, quickScope, searchTerm, sortBy, sourceScope])
+  , [filterStatus, filterType, importScope, listings, quickScope, searchTerm, sortBy, sourceScope])
 
 
   const handleDeleteProperty = async (listingId: string) => {
@@ -322,15 +343,34 @@ const Properties = () => {
               <option value="price-asc">Cena: rosnąco</option>
               <option value="price-desc">Cena: malejąco</option>
             </select>
+            <div className="flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-1">
+              <button
+                type="button"
+                onClick={() => setImportScopeFilter('all')}
+                className={`px-3 py-1.5 text-sm rounded-md transition-colors ${importScope === 'all' ? 'bg-(--accent-main) text-black' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
+              >
+                Wszystkie importy
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportScopeFilter('partial')}
+                className={`px-3 py-1.5 text-sm rounded-md transition-colors ${importScope === 'partial' ? 'bg-amber-500 text-black' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'}`}
+              >
+                Dane częściowe
+              </button>
+            </div>
           </div>
         </div>
-        {(quickScope !== 'all' || sourceScope !== 'all') && (
+        {(quickScope !== 'all' || sourceScope !== 'all' || importScope !== 'all') && (
           <div className="mt-3 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
             <span className="px-2 py-1 rounded-full border border-blue-300/50 dark:border-blue-700/60 bg-blue-50 dark:bg-blue-900/20">
               {quickScope === 'new7d' ? 'Filtr: nowe oferty (7 dni)' : quickScope === 'expiring' ? 'Filtr: oferty wygasające' : 'Filtr: niestandardowy'}
             </span>
             {sourceScope === 'imported' && (
               <span className="px-2 py-1 rounded-full border border-cyan-300/50 dark:border-cyan-700/60 bg-cyan-50 dark:bg-cyan-900/20">Źródło: import z monitoringu</span>
+            )}
+            {importScope === 'partial' && (
+              <span className="px-2 py-1 rounded-full border border-amber-300/50 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300">Import: dane częściowe</span>
             )}
             <button onClick={clearQuickFilters} className="px-2 py-1 rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
               Wyczyść szybkie filtry
@@ -350,6 +390,10 @@ const Properties = () => {
         {filteredProperties.map((property) => {
           if (!property.property) return null
           const address = property.property.address || { city: '', street: '', buildingNumber: '', apartmentNumber: '' }
+          const partialImport = getPartialImportMeta(property)
+          const partialImportTitle = partialImport.isPartial
+            ? `Oferta została zaimportowana częściowo${partialImport.missingFields.length ? ` — brakuje: ${partialImport.missingFields.join(', ')}` : '.'}`
+            : ''
           return (
             <div
               key={property.id}
@@ -370,12 +414,15 @@ const Properties = () => {
                 )}
               </div>
               <div className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
+                <div className="flex items-start justify-between mb-3 gap-3">
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-800 dark:text-white line-clamp-1">{getTypeLabel(property.property.propertyType)} w {address.city}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{property.listingNumber}</p>
                   </div>
-                  {getStatusBadge(property.status)}
+                  <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
+                    {partialImport.isPartial ? <span title={partialImportTitle} className="px-2 py-1 rounded-full text-xs font-medium border border-amber-300/50 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300">Dane częściowe</span> : null}
+                    {getStatusBadge(property.status)}
+                  </div>
                 </div>
 
                 <div className="space-y-2 mb-4">

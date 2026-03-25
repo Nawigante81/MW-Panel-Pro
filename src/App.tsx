@@ -523,6 +523,7 @@ const AppLayout = () => {
             <Route path="/raporty" element={<Reports />} />
             <Route path="/publikacja" element={<PortalPublish />} />
             <Route path="/market" element={<Marketplace />} />
+            <Route path="/monitoring/errors" element={<Marketplace />} />
             <Route path="/pipeline" element={<Pipeline />} />
             <Route path="/kalkulator" element={<FinancialCalculator />} />
             <Route path="/mapa" element={<PropertyMap />} />

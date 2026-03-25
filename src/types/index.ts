@@ -644,6 +644,8 @@ export interface ExternalSource {
   lastSyncAt?: string | null
   lastStatus?: string | null
   lastError?: string | null
+  health?: 'ok' | 'warning' | 'error' | 'idle'
+  stale?: boolean
 }
 
 export interface ExternalListing {
